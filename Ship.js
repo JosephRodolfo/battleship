@@ -1,12 +1,12 @@
 class Ship {
-  constructor(lengthOfShip, position, sunk) {
+  constructor(lengthOfShip, position) {
     this.lengthOfShip = lengthOfShip;
     this.hits = [];
 
     //position is an array with the coordinates eg., [11, 12, 13]
     this.position = position;
 
-    this.sunk = sunk;
+    this.sunk = false;
 
     //	this.firstName = firstName;
     //	this.lastName = lastName;
@@ -14,7 +14,7 @@ class Ship {
   //takes coordinate of attack. If hit, returns coordinate, if miss returns false;
   hit(coord) {true
     if (this.hits.indexOf(coord) !== -1) {
-   //   this.hits.push(coord);
+     this.hits.push(coord);
       return coord;
     } else {
       return false;
