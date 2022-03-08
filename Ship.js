@@ -1,9 +1,12 @@
+const coordParse   = require("./coordParse");
+
+
 class Ship {
   constructor(lengthOfShip, position) {
     this.lengthOfShip = lengthOfShip;
     this.hits = [];
 
-    //position is an array with the coordinates eg., [11, 12, 13]
+    //position is an array with the coordinates eg., [x1y1, x1y2, x1y3]
     this.position = position;
 
     this.sunk = false;
@@ -12,7 +15,10 @@ class Ship {
     //	this.lastName = lastName;
   }
   //takes coordinate of attack. If hit, returns coordinate, if miss returns false;
-  hit(coord) {true
+  hit(x, y) {
+    let coord = coordParse(x, y);
+
+
     if (this.hits.indexOf(coord) !== -1) {
      this.hits.push(coord);
       return coord;

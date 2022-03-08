@@ -1,5 +1,6 @@
 const Ship = require("./Ship");
 const Gameboard = require("./Gameboard")
+const coordParse = require("./coordParse")
 
 class Player {
   constructor() {
@@ -8,7 +9,8 @@ class Player {
   }
 //attack method records coordinate of attack; if not previously done, returns coordinates to be used
 //in gameboard methods;
-  attack(coord){
+  attack(x, y){
+  let coord=  coordParse(x, y);
 
     if(this.playedCoords.includes(coord)){
 

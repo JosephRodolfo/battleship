@@ -1,4 +1,5 @@
 const Ship = require("./Ship");
+const coordParse = require("./coordParse");
 
 class Gameboard {
   constructor() {
@@ -21,7 +22,9 @@ class Gameboard {
     return this.shipsPresent;
   }
 
-  receiveAttack(coord) {
+  receiveAttack(x, y) {
+    let coord = coordParse(x, y);
+
     for (let i = 0; i < this.shipsPresent.length; i++) {
       if (this.shipsPresent[i].position.includes(coord)) {
         this.shipsPresent[i].hits.push(coord);
@@ -49,8 +52,8 @@ class Gameboard {
       }
     });
 
-   let winOrLoss= shipsSunk >= 5 ? true : false;
-   return winOrLoss;
+   return shipsSunk >= 5 ? true : false;
+   // return winOrLoss;
   }
 }
 
