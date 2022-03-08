@@ -83,3 +83,32 @@ test("Test if ship was hit, expect a miss for this test which is pushed to this.
 });
 
 
+test("Test checkForAllSunk(), returns true if all 5 ships sunk, false if not, in this case none sank", () => {
+  let testBoard = new Gameboard();
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+  testBoard.recordPlacements(testBoard.placeShip(3, [13, 14, 15]));
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+  testBoard.recordPlacements(testBoard.placeShip(3, [13, 14, 15]));
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+
+
+
+  expect(testBoard.checkForAllSunk()).toBe(false);
+});
+
+test("Test checkForAllSunk(), returns true if all 5 ships sunk, false if not, in this case all sunk", () => {
+  let testBoard = new Gameboard();
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+  testBoard.recordPlacements(testBoard.placeShip(3, [13, 14, 15]));
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+  testBoard.recordPlacements(testBoard.placeShip(3, [13, 14, 15]));
+  testBoard.recordPlacements(testBoard.placeShip(5, [22, 23, 24, 25, 26]));
+
+  testBoard.shipsPresent.forEach(element => element.sunk = true);
+
+
+  expect(testBoard.checkForAllSunk()).toBe(true);
+});
+
+
+
