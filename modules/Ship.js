@@ -1,7 +1,7 @@
-const coordParse   = require("./coordParse");
+//const coordParse   = require("./coordParse");
 
-
-class Ship {
+import {coordParse} from "./coordParse.js";
+export class Ship {
   constructor(lengthOfShip, position) {
     this.lengthOfShip = lengthOfShip;
     this.hits = [];
@@ -39,8 +39,8 @@ class Ship {
     //isSunk() should be a function that calculates it based on their length and whether all of their positions are ‘hit’.
   }
 }
-
-module.exports = Ship;
+/*
+module.exports = Ship;*/
 
 /*   0    1    2    3    4    5   6   7
 0  

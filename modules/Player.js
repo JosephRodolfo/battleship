@@ -1,8 +1,15 @@
-const Ship = require("./Ship");
-const Gameboard = require("./Gameboard")
-const coordParse = require("./coordParse")
+//const Ship = require("./Ship");
+//const Gameboard = require("./Gameboard")
+//const coordParse = require("./coordParse")
 
-class Player {
+
+import {coordParse} from "./coordParse.js"
+import {Gameboard} from "./Gameboard.js"
+import {Ship} from "./Ship.js"
+
+
+
+export class Player {
   constructor() {
       this.playedCoords = []
  
@@ -52,4 +59,4 @@ return coordFinal;} else {
 
 }
 
-module.exports = Player;
+//module.exports = Player;

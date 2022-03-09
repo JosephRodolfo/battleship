@@ -1,7 +1,7 @@
-const Ship = require("./Ship");
-const coordParse = require("./coordParse");
+//const Ship = require("./Ship");
+//const coordParse = require("./coordParse");
 
-class Gameboard {
+export class Gameboard {
   constructor() {
     this.shipsPresent = [];
 
@@ -57,4 +57,4 @@ class Gameboard {
   }
 }
 
-module.exports = Gameboard;
+//module.exports = Gameboard;
