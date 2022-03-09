@@ -10,8 +10,9 @@ import {Ship} from "./Ship.js"
 
 //Potentially add in ability to name players later
 export class Player {
-  constructor() {
-      this.playedCoords = []
+  constructor(name) {
+      this.playedCoords = [],
+      this.name =name
  
   }
 //attack method records coordinate of attack; if not previously done, returns coordinates to be used
@@ -21,7 +22,8 @@ export class Player {
 
     if(this.playedCoords.includes(coord)){
 
-        alert("Already played these coordinates");
+        alert(this.playedCoords + "Already played these coordinates");
+        return false;
     } else {
 
         this.playedCoords.push(coord);
@@ -42,14 +44,12 @@ export class Player {
 
 let x=getRandomInt(10);
 let y=getRandomInt(10);
+let parsedCoord = coordParse(x, y);
 
-let coord=x.toString().concat(y.toString());
-let coordFinal =   parseInt(coord);
+if(!(this.playedCoords.includes(parsedCoord))){
+  this.playedCoords.push(parsedCoord);
 
-
-if(!(this.playedCoords.includes(coordFinal))){
-
-return coordFinal;} else {
+return parsedCoord;} else {
 
 
     this.randomAttack();

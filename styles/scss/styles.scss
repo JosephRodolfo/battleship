@@ -3,7 +3,9 @@
 }
 
 body {
+
     background-color: blue;
+    
 
 }
 h1 {background-color: red;}
@@ -14,22 +16,35 @@ h1 {background-color: red;}
     --grid-rows: 1;
 }
 
+@mixin flexCenter($flexDirection){
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $flexDirection; 
+}
+
+#both-boards-container {
+@include flexCenter(row);
+background-color: aquamarine;
+}
+
 #game-board-grid-1{
 
-    grid-template-columns: repeat(var(--grid-cols), 50px);
-    grid-template-rows: repeat(var(--grid-rows), 50px);
+    grid-template-columns: repeat(var(--grid-cols), 2.5em);
+    grid-template-rows: repeat(var(--grid-rows), 2.5em);
     display: grid;
     background-color: orange;
-    width: 800px;
+    width: min-content;
 }
 
 #game-board-grid-2{
 
-    grid-template-columns: repeat(var(--grid-cols), 50px);
-    grid-template-rows: repeat(var(--grid-rows), 50px);
+    grid-template-columns: repeat(var(--grid-cols), 2.5em);
+    grid-template-rows: repeat(var(--grid-rows), 2.5em);
     display: grid;
     background-color: plum;
-    width: 800px;
+    width: min-content;
 }
 
 .game-board-grid-item{

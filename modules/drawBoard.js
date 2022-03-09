@@ -1,6 +1,5 @@
 export function drawBoard(rows, cols, boardNumber) {
   const gameBoardGridContainer = document.getElementById("game-board-grid-" + boardNumber.toString());
-console.log(gameBoardGridContainer);
  gameBoardGridContainer.style.setProperty("--grid-rows", rows); //rows);
 gameBoardGridContainer.style.setProperty("--grid-cols", cols); //cols);
   for (let y = 0; y < rows; y++) {

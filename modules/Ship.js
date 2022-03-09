@@ -33,7 +33,9 @@ export class Ship {
   //returns true if so, false if not;
   isSunk() {
     if (this.hits.length == this.lengthOfShip) {
-  //    this.sunk = true;
+      this.sunk = true;
+      console.log("ship sunk");
+  alert("This ship is sunk");
       return true;
     } else {
       return false;

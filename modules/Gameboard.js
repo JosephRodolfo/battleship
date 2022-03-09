@@ -4,10 +4,11 @@ import {Ship} from "./Ship.js";
 import { coordParse } from "./coordParse.js";
 
 export class Gameboard {
-  constructor() {
-    this.shipsPresent = [];
+  constructor(name) {
+    this.name = name,
+    this.shipsPresent = [],
 
-    this.missedShots = [];
+    this.missedShots = []
   }
   //returns a ship object.
   placeShip(lengthOfShip, position) {
@@ -31,10 +32,11 @@ export class Gameboard {
       if (this.shipsPresent[i].position.includes(coord)) {
         this.shipsPresent[i].hits.push(coord);
         return this.shipsPresent[i];
-      }
+      }  
     }
+
     this.missedShots.push(coord);
-    return this.missedShots;
+    return false;
 
     //  Gameboards should have a receiveAttack function that takes a pair of coordinates, determines whether or not the attack hit a ship and then sends the ‘hit’ function to the correct ship, or records the coordinates of the missed shot.
   }
@@ -46,7 +48,7 @@ export class Gameboard {
     //its own function
   }
 
-  checkForAllSunk() {
+  checkForAllSunk(numberOfShips) {
     let shipsSunk = 0;
     this.shipsPresent.forEach((element) => {
       if (element.sunk) {
@@ -54,7 +56,7 @@ export class Gameboard {
       }
     });
 
-   return shipsSunk >= 5 ? true : false;
+   return shipsSunk >= numberOfShips ? true : false;
    // return winOrLoss;
   }
 }

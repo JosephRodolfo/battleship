@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./styles/css/styles.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./styles/css/styles.css" rel="stylesheet" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Battleship</h1>
-    <div id="game-board-grid-1">
+    <div id="both-boards-container">
+      <div>
+          <h2>My board, onto which the computer is firing.</h2>
+        <div id="game-board-grid-1"></div>
+      </div>
 
+      <input id="attack-coords-input" type="text" />
+      <button id="attack-button" type="submit">Submit</button>
+      <div>
+        <h2>The computer's board, onto which I'm firing.</h2>
+        <div id="game-board-grid-2"></div>
+      </div>
     </div>
-    <input id="attack-coords-input" type="text"/>
-    <button id="attack-button" type="submit">Submit</button>
-
-    <div id="game-board-grid-2">
-
-    </div>
-</body>
-<script src="./app.js" type="module"></script>
+  </body>
+  <script src="./app.js" type="module"></script>
 </html>
