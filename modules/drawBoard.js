@@ -1,6 +1,5 @@
-export function drawBoard(rows, cols) {
-    console.log("teset");
-  const gameBoardGridContainer = document.getElementById("game-board-grid");
+export function drawBoard(rows, cols, boardNumber) {
+  const gameBoardGridContainer = document.getElementById("game-board-grid-" + boardNumber.toString());
 console.log(gameBoardGridContainer);
  gameBoardGridContainer.style.setProperty("--grid-rows", rows); //rows);
 gameBoardGridContainer.style.setProperty("--grid-cols", cols); //cols);
@@ -11,7 +10,6 @@ gameBoardGridContainer.style.setProperty("--grid-cols", cols); //cols);
       let cellId = "x" + x + "y" + y;
       cell.id = "x" + x + "y" + y;
       cell.innerText = cellId;
-      console.log(cell);
       //     cell.innerText = "b" + (c + 1) + "" + (i + 1);
 
       gameBoardGridContainer.appendChild(cell).className = "game-board-grid-item";

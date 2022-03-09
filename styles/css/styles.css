@@ -15,11 +15,19 @@ h1 {
   --grid-rows: 1;
 }
 
-#game-board-grid {
-  grid-template-columns: repeat(10, 50px);
-  grid-template-rows: repeat(10, 50px);
+#game-board-grid-1 {
+  grid-template-columns: repeat(var(--grid-cols), 50px);
+  grid-template-rows: repeat(var(--grid-rows), 50px);
   display: grid;
-  background-color: gray;
+  background-color: orange;
+  width: 800px;
+}
+
+#game-board-grid-2 {
+  grid-template-columns: repeat(var(--grid-cols), 50px);
+  grid-template-rows: repeat(var(--grid-rows), 50px);
+  display: grid;
+  background-color: plum;
   width: 800px;
 }
 

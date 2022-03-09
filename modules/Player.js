@@ -8,7 +8,7 @@ import {Gameboard} from "./Gameboard.js"
 import {Ship} from "./Ship.js"
 
 
-
+//Potentially add in ability to name players later
 export class Player {
   constructor() {
       this.playedCoords = []
@@ -21,7 +21,7 @@ export class Player {
 
     if(this.playedCoords.includes(coord)){
 
-        alert("Already played these coordinates")
+        alert("Already played these coordinates");
     } else {
 
         this.playedCoords.push(coord);

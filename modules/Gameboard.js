@@ -1,5 +1,7 @@
 //const Ship = require("./Ship");
 //const coordParse = require("./coordParse");
+import {Ship} from "./Ship.js";
+import { coordParse } from "./coordParse.js";
 
 export class Gameboard {
   constructor() {
