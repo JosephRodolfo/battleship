@@ -260,9 +260,9 @@ const displayController = (function () {
       rotateStatus
     );
 
-    if (e.currentTarget.style.backgroundColor !== "blue") {
+  // if (e.currentTarget.style.backgroundColor !== "blue") {
       printProjectedShip(projectShipCoords);
-    }
+   // }
   }
 
   function calculateShipToProject(stringCoord, gameboard, rotate) {
@@ -310,6 +310,10 @@ const displayController = (function () {
       if (element.style.backgroundColor == "green") {
         element.style.setProperty("background-color", "orange");
       }
+      if (element.style.backgroundColor == "red") {
+        element.style.setProperty("background-color", "blue");
+      }
+
     });
   }
   function printShip(e, bool) {
@@ -329,6 +333,9 @@ const displayController = (function () {
         let square = document.querySelector(coord);
 
         square.style.setProperty("background-color", "blue");
+        if(e.currentTarget.style.backgroundColor=="blue"){
+          e.currentTarget.style.backgroundColor=="red"
+        }
       });
     } else {
       return projectShipCoords;
@@ -355,6 +362,12 @@ const displayController = (function () {
       if (square.style.backgroundColor !== "blue") {
         square.style.setProperty("background-color", "green");
       }
+
+      if (square.style.backgroundColor == "blue") {
+        square.style.setProperty("background-color", "red");
+      }
+
+
     });
   }
 
