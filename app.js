@@ -1,5 +1,4 @@
 import { drawBoard } from "./modules/drawBoard.js";
-window.drawBoard = drawBoard;
 import { Ship } from "./modules/Ship.js";
 import { coordParse } from "./modules/coordParse.js";
 import { Player } from "./modules/Player.js";
@@ -28,8 +27,8 @@ const gameController = (function () {
   function initializeGame() {
     drawBoard(10, 10, 1);
     drawBoard(10, 10, 2);
-    placeShipsHuman();
-    //placeShipsComputer;
+    placeShips();
+    // placeShipsComputer();
     //     for (let i=0; i<5; i++) {
     //create random ship list generator function
     //set up prompt for player to place ships
@@ -85,8 +84,8 @@ const gameController = (function () {
     //  }
   }
 
-  function placeShipsHuman() {
-    const rotateButton=document.getElementById("rotate-button");
+  function placeShips() {
+    const rotateButton = document.getElementById("rotate-button");
     rotateButton.addEventListener("click", displayController.toggleRotate);
     const gridBoards = document.querySelectorAll(
       "#game-board-grid-1 > .game-board-grid-item"
@@ -102,64 +101,122 @@ const gameController = (function () {
   }
 
   function placeShipHandlerHuman(e) {
-    let rotateStatus = document.getElementById("rotate-button").classList =="true" ? true : false;
-    let placedShipCoordsArray = displayController.calculateShipToProject(e.currentTarget.id, gameController.gameboardTwo, rotateStatus)
+    let rotateStatus =
+      document.getElementById("rotate-button").classList == "true"
+        ? true
+        : false;
+    let placedShipCoordsArray = displayController.calculateShipToProject(
+      e.currentTarget.id,
+      gameController.gameboardTwo,
+      rotateStatus
+    );
 
-    if(checkForOccupied(placedShipCoordsArray, gameController.gameboardTwo) && checkForOffBoard(placedShipCoordsArray)){
-        let ship =  gameboardTwo.placeShip(gameboardTwo.unplacedShipsInventory[gameboardTwo.unplacedShipsInventory.length - 1], placedShipCoordsArray);
-      console.log(gameboardTwo.unplacedShipsInventory);
-        gameboardTwo.recordPlacements(ship);
+    if (
+      checkForOccupied(placedShipCoordsArray, gameController.gameboardTwo) &&
+      checkForOffBoard(placedShipCoordsArray)
+    ) {
+      let ship = gameboardTwo.placeShip(
+        gameboardTwo.unplacedShipsInventory[
+          gameboardTwo.unplacedShipsInventory.length - 1
+        ],
+        placedShipCoordsArray
+      );
+      gameboardTwo.recordPlacements(ship);
       displayController.printShip(e, true);
 
       gameboardTwo.unplacedShipsInventory.pop();
-
-
     }
 
+    if (gameboardTwo.unplacedShipsInventory.length == 0) {
+      alert("stop placing ships!");
+      placeShipsComputer();
+    }
 
+    //check forOffBoard takes array of proposed ship to see if it goes off board. Right now gameboard size is hardcoded.
 
+    //let placedShipCoordsArray = displayController.printShip(e);
+  }
 
+  function placeShipsComputer() {
+    while (gameboardOne.unplacedShipsInventory.length > 0) {
+      let randomCoord = playerTwo.randomAttack();
 
+      function getRandomBool() {
+        let oneOrTwo = Math.floor(Math.random() * 2);
+        if (oneOrTwo == 1) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
-//check forOffBoard takes array of proposed ship to see if it goes off board. Right now gameboard size is hardcoded. 
+      let randomBool = getRandomBool();
 
+      //let rotateStatus = document.getElementById("rotate-button").classList =="true" ? true : false;
+      let placedShipCoordsArray = displayController.calculateShipToProject(
+        randomCoord,
+        gameController.gameboardOne,
+        randomBool
+      );
 
-  //let placedShipCoordsArray = displayController.printShip(e);
-
-//  console.log(placedShipCoordsArray);
-}
-
-
-function checkForOccupied(array, gameboard) {
-  for ( let i = 0; i < gameboard.shipsPresent.length; i++ ) {
-    for (let t = 0; t < array.length; t++) {
       if (
-        gameboard.shipsPresent[i].position.includes(
-          array[t]
-        )
-      ) { 
-        alert("Already a ship here!")
-        return false;
-      } 
+        checkForOccupied(placedShipCoordsArray, gameController.gameboardOne) &&
+        checkForOffBoard(placedShipCoordsArray)
+      ) {
+        let ship = gameboardOne.placeShip(
+          gameboardOne.unplacedShipsInventory[
+            gameboardOne.unplacedShipsInventory.length - 1
+          ],
+          placedShipCoordsArray
+        );
+        gameboardOne.recordPlacements(ship);
+        //  displayController.printShip(e, true);
+
+        gameboardOne.unplacedShipsInventory.pop();
+      }
+    }
+
+    if (gameboardOne.unplacedShipsInventory.length == 0) {
+      for (
+        let i = 0;
+        i < gameController.gameboardOne.shipsPresent.length;
+        i++
+      ) {
+        displayController.printShipFake(
+          gameController.gameboardOne.shipsPresent[i],
+          2
+        );
+      }
+
+      gameController.turnFlow();
     }
   }
-  return true;
-}
 
-function checkForOffBoard(array) {
-  for (let i=0;i<array.length;i++){
-  let temp = coordParseReverse(array[i]);
-  if(temp[0]>9 || temp[0]<0 || temp[1]>9 || temp[0]<0){
-    alert("ship is off board, try again")
-    return false;
+  function checkForOccupied(array, gameboard) {
+    if (array == undefined) {
+      return;
+    }
+    for (let i = 0; i < gameboard.shipsPresent.length; i++) {
+      for (let t = 0; t < array.length; t++) {
+        if (gameboard.shipsPresent[i].position.includes(array[t])) {
+          alert("Already a ship here!");
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
-  } return true;
-    
-    
-
-
-}
+  function checkForOffBoard(array) {
+    for (let i = 0; i < array.length; i++) {
+      let temp = coordParseReverse(array[i]);
+      if (temp[0] > 9 || temp[0] < 0 || temp[1] > 9 || temp[0] < 0) {
+        alert("ship is off board, try again");
+        return false;
+      }
+    }
+    return true;
+  }
 
   function resetGame() {
     displayController.resetBoard();
@@ -223,7 +280,6 @@ function checkForOffBoard(array) {
         return;
         //       submitAttack(gameController.playerOne, gameController.gameboardTwo);
       }
-      console.log(gameboard);
       if (gameboard.checkForAllSunk(gameboard.shipsPresent.length)) {
         alert("You win!");
         resetGame();
@@ -245,14 +301,21 @@ function checkForOffBoard(array) {
     playerOne: playerOne,
     playerTwo: playerTwo,
     gameboardOne: gameboardOne,
-    gameboardTwo: gameboardTwo
+    gameboardTwo: gameboardTwo,
   };
 })();
 
 const displayController = (function () {
   function projectShip(e) {
-    let rotateStatus = document.getElementById("rotate-button").classList =="true" ? true : false;
-    let projectShipCoords = calculateShipToProject(e.currentTarget.id, gameController.gameboardTwo, rotateStatus);
+    let rotateStatus =
+      document.getElementById("rotate-button").classList == "true"
+        ? true
+        : false;
+    let projectShipCoords = calculateShipToProject(
+      e.currentTarget.id,
+      gameController.gameboardTwo,
+      rotateStatus
+    );
 
     if (e.currentTarget.style.backgroundColor !== "blue") {
       printProjectedShip(projectShipCoords);
@@ -263,29 +326,30 @@ const displayController = (function () {
   function calculateShipToProject(stringCoord, gameboard, rotate) {
     let positionsToProject = gameboard.unplacedShipsInventory;
     let coordArray = coordParseReverse(stringCoord);
-    let blankArray = [];
-    if (rotate){
-      coordArray[1]=coordArray[1]-1;
-    } else {
-
-      coordArray[0]=coordArray[0]-1;
-
+    if (coordArray == undefined) {
+      return;
     }
-
+    let blankArray = [];
+    if (rotate) {
+      coordArray[1] = coordArray[1] - 1;
+    } else {
+      coordArray[0] = coordArray[0] - 1;
+    }
 
     let tempY = coordArray[1];
     let tempX = coordArray[0];
 
-    for (let i = 0; i < (positionsToProject[positionsToProject.length-1]); i++) {
-     if(rotate){
-tempY = tempY + 1;
-console.log("y rotated");
-
-     } else {
-tempX= tempX + 1;
-console.log("x rotate");
-     }
-    //  let newTemp = tempX + i;
+    for (
+      let i = 0;
+      i < positionsToProject[positionsToProject.length - 1];
+      i++
+    ) {
+      if (rotate) {
+        tempY = tempY + 1;
+      } else {
+        tempX = tempX + 1;
+      }
+      //  let newTemp = tempX + i;
       let tempCoordArr = [tempX, tempY];
 
       blankArray.push(coordParse(tempCoordArr[0], tempCoordArr[1]));
@@ -294,14 +358,8 @@ console.log("x rotate");
     return blankArray;
   }
 
-  function toggleRotate(){
-
+  function toggleRotate() {
     this.classList.toggle("true");
-
-   
-
-
-
   }
   function removeProjectedShip(e) {
     //e.currentTarget.style.setProperty("background-color", 'orange');
@@ -316,9 +374,15 @@ console.log("x rotate");
   }
   //I won't need this when I set up entering ship locations manually.
   function printShip(e, bool) {
-    let rotateStatus = document.getElementById("rotate-button").classList =="true" ? true : false;
-    let projectShipCoords = calculateShipToProject(e.currentTarget.id, gameController.gameboardTwo, rotateStatus);
-    console.log(projectShipCoords);
+    let rotateStatus =
+      document.getElementById("rotate-button").classList == "true"
+        ? true
+        : false;
+    let projectShipCoords = calculateShipToProject(
+      e.currentTarget.id,
+      gameController.gameboardTwo,
+      rotateStatus
+    );
 
     //  const gameBoardGridContainer = document.getElementById("game-board-grid-one");
     if (bool) {
@@ -351,6 +415,9 @@ console.log("x rotate");
     array.forEach((element) => {
       let coord = "#game-board-grid-1" + " > #" + element.toString();
       let square = document.querySelector(coord);
+      if (square === null) {
+        return;
+      }
       if (square.style.backgroundColor !== "blue") {
         square.style.setProperty("background-color", "green");
       }
@@ -388,20 +455,21 @@ console.log("x rotate");
     projectShip: projectShip,
     removeProjectedShip: removeProjectedShip,
     calculateShipToProject: calculateShipToProject,
-    toggleRotate: toggleRotate
+    toggleRotate: toggleRotate,
+    printShipFake: printShipFake,
   };
 })();
 
 gameController.initializeGame();
 //gameController.turnFlow();
 
-for (let i = 0; i < gameController.gameboardTwo.shipsPresent.length; i++) {
-  displayController.printShip(gameController.gameboardTwo.shipsPresent[i], 1);
-}
+//for (let i = 0; i < gameController.gameboardTwo.shipsPresent.length; i++) {
+//  displayController.printShip(gameController.gameboardTwo.shipsPresent[i], 1);
+//}
 
-for (let i = 0; i < gameController.gameboardOne.shipsPresent.length; i++) {
-  displayController.printShip(gameController.gameboardOne.shipsPresent[i], 2);
-}
+//for (let i = 0; i < gameController.gameboardOne.shipsPresent.length; i++) {
+//  displayController.printShipFake(gameController.gameboardOne.shipsPresent[i], 2);
+//}
 
 /* Sample Ship list 
 [{
