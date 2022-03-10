@@ -8,8 +8,10 @@ export class Gameboard {
     this.name = name,
     this.shipsPresent = [],
 
-    this.missedShots = []
+    this.missedShots = [],
     this.unplacedShipsInventory = [5, 4, 4, 3, 3]
+  //  this.unplacedShipsInventory = [3]
+
   }
   //returns a ship object.
   placeShip(lengthOfShip, position) {
