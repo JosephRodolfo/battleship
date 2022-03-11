@@ -23,6 +23,8 @@ const gameController = (function () {
   function placeShips() {
     const rotateButton = document.getElementById("rotate-button");
     rotateButton.addEventListener("click", displayController.toggleRotate);
+    
+    
     const gridBoards = document.querySelectorAll(
       "#game-board-grid-1 > .game-board-grid-item"
     );
@@ -124,6 +126,21 @@ const gameController = (function () {
         );
       }*/
 
+      const gridBoards = document.querySelectorAll(
+        "#game-board-grid-1 > .game-board-grid-item"
+      );
+
+      gridBoards.forEach((element) => {
+
+     
+        element.removeEventListener("mouseenter", displayController.projectShip);
+        element.removeEventListener(
+          "mouseout",
+          displayController.removeProjectedShip
+        );
+        element.removeEventListener("click", gameController.placeShipHandlerHuman);
+      });
+
       gameController.turnFlow();
     }
   }
@@ -169,30 +186,72 @@ const gameController = (function () {
   }
 
   function turnFlow(whichPlayer) {
+
+
+
+
+    const gridBoard = document.querySelectorAll(
+      "#game-board-grid-2 > .game-board-grid-item"
+    );
+    gridBoard.forEach((element) => {
+   
+      element.addEventListener("click", getAttackCoordListener);
+    });
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
     alert("Attack please");
     /* let attackCoords=attackCoordsInput.value;
       let coordsArray = coordParse(attackCoords);
       let x= coordsArray[0];
       let y=coordsArray[1];*/
-
+/*
     attackButton.addEventListener("click", function () {
       submitAttack(gameController.playerOne, gameController.gameboardTwo);
-    });
+    });*/
+
+    function getAttackCoordListener(e) {
+   let attackCoord = e.currentTarget.id;
+      submitAttack(gameController.playerOne, gameController.gameboardTwo, attackCoord);
+
+   
+     }
     //right submitAttack now function happens when you submit attack coords, for now button manual entered
     //kicks off the main attack sequence of the game. coordinates are put in attack functino which
     //determines if it's a hit or a miss/already used. If a hit, gameboard takes it and
     //correct ship records the hit. ship then checks if sunk or not, and finally the board checks if
     //all ships are sunk or not.
-    function submitAttack(player, gameboard) {
-      let attackCoords = attackCoordsInput.value;
+    function submitAttack(player, gameboard, attackValue) {
+    //  let attackCoords = attackValue;
       let coordsArray = [];
 
       if (player.name == "human") {
-        coordsArray = coordParseReverse(attackCoords);
+        coordsArray = coordParseReverse(attackValue);
+        console.log(coordsArray);
+
       } else if (player.name == "computer") {
         coordsArray = playerTwo.randomAttack();
-        attackCoords = coordsArray;
         coordsArray = coordParseReverse(coordsArray);
+      }
+
+   //   console.log(coordsArray);
+
+      if (coordsArray ==undefined){
+        return;
       }
       let x = coordsArray[0];
       let y = coordsArray[1];
@@ -214,9 +273,9 @@ const gameController = (function () {
 
         if (hitOrMissedShip !== false) {
           hitOrMissedShip.sunk = hitOrMissedShip.isSunk();
-          displayController.displayHitOrMiss(true, attackCoords, gameboard);
+          displayController.displayHitOrMiss(true, coordParse(x, y), gameboard);
         } else {
-          displayController.displayHitOrMiss(false, attackCoords, gameboard);
+          displayController.displayHitOrMiss(false, coordParse(x, y), gameboard);
         }
       } else if (attackResult == false) {
         attackCoordsInput.value = "";
@@ -370,6 +429,9 @@ const displayController = (function () {
 
     });
   }
+
+
+
 
   function displayHitOrMiss(bool, coordsString, gameboard) {
     let coord = "";

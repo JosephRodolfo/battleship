@@ -39,6 +39,10 @@ h1 {
   width: min-content;
 }
 
+#game-board-grid-2 > .game-board-grid-item:hover {
+  background-color: white;
+}
+
 .game-board-grid-item {
   width: 100%;
   height: 100%;
