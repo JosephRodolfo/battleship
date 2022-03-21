@@ -25,7 +25,7 @@ export class Player {
     }
   }
 
-  randomAttack() {
+  getRandomCoords() {
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
     }
@@ -40,7 +40,7 @@ export class Player {
       return parsedCoord;
     } else {
       console.log("retry");
-     return this.randomAttack();
+     return this.getRandomCoords();
     }
   }
 }

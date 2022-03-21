@@ -4,6 +4,7 @@ import { coordParse } from "./modules/coordParse.js";
 import { Player } from "./modules/Player.js";
 import { Gameboard } from "./modules/Gameboard.js";
 import { coordParseReverse } from "./modules/coordParseReverse.js";
+import {calculateShipToProject} from "./modules/calculateShipToProject.js"
 
 const gameController = (function () {
   let playerOne = new Player("human");
@@ -23,8 +24,7 @@ const gameController = (function () {
   function placeShips() {
     const rotateButton = document.getElementById("rotate-button");
     rotateButton.addEventListener("click", displayController.toggleRotate);
-    
-    
+
     const gridBoards = document.querySelectorAll(
       "#game-board-grid-1 > .game-board-grid-item"
     );
@@ -43,15 +43,18 @@ const gameController = (function () {
       document.getElementById("rotate-button").classList == "true"
         ? true
         : false;
-    let placedShipCoordsArray = displayController.calculateShipToProject(
+    let placedShipCoordsArray = calculateShipToProject(
       e.currentTarget.id,
       gameController.gameboardTwo,
       rotateStatus
     );
 
     if (
-      checkForOccupied(placedShipCoordsArray, gameController.gameboardTwo) &&
-      checkForOffBoard(placedShipCoordsArray)
+      gameController.gameboardTwo.checkForOccupied(
+        placedShipCoordsArray,
+        gameController.gameboardTwo
+      ) &&
+      gameController.gameboardTwo.checkForOffBoard(placedShipCoordsArray)
     ) {
       let ship = gameboardTwo.placeShip(
         gameboardTwo.unplacedShipsInventory[
@@ -71,12 +74,11 @@ const gameController = (function () {
     }
 
     //check forOffBoard takes array of proposed ship to see if it goes off board. Right now gameboard size is hardcoded.
-
   }
 
   function placeShipsComputer() {
     while (gameboardOne.unplacedShipsInventory.length > 0) {
-      let randomCoord = playerTwo.randomAttack();
+      let randomCoord = playerTwo.getRandomCoords();
 
       function getRandomBool() {
         let oneOrTwo = Math.floor(Math.random() * 2);
@@ -90,15 +92,18 @@ const gameController = (function () {
       let randomBool = getRandomBool();
 
       //let rotateStatus = document.getElementById("rotate-button").classList =="true" ? true : false;
-      let placedShipCoordsArray = displayController.calculateShipToProject(
+      let placedShipCoordsArray = calculateShipToProject(
         randomCoord,
         gameController.gameboardOne,
         randomBool
       );
 
       if (
-        checkForOccupied(placedShipCoordsArray, gameController.gameboardOne) &&
-        checkForOffBoard(placedShipCoordsArray)
+        gameController.gameboardOne.checkForOccupied(
+          placedShipCoordsArray,
+          gameController.gameboardOne
+        ) &&
+        gameController.gameboardOne.checkForOffBoard(placedShipCoordsArray)
       ) {
         let ship = gameboardOne.placeShip(
           gameboardOne.unplacedShipsInventory[
@@ -115,7 +120,7 @@ const gameController = (function () {
 
     if (gameboardOne.unplacedShipsInventory.length == 0) {
       //Displays computer ship placements for testing purposes
-   /*   for (
+      /*   for (
         let i = 0;
         i < gameController.gameboardOne.shipsPresent.length;
         i++
@@ -131,123 +136,71 @@ const gameController = (function () {
       );
 
       gridBoards.forEach((element) => {
-
-     
-        element.removeEventListener("mouseenter", displayController.projectShip);
+        element.removeEventListener(
+          "mouseenter",
+          displayController.projectShip
+        );
         element.removeEventListener(
           "mouseout",
           displayController.removeProjectedShip
         );
-        element.removeEventListener("click", gameController.placeShipHandlerHuman);
+        element.removeEventListener(
+          "click",
+          gameController.placeShipHandlerHuman
+        );
       });
 
       gameController.turnFlow();
     }
   }
 
-  function checkForOccupied(array, gameboard) {
-    if (array == undefined) {
-      return;
-    }
-    for (let i = 0; i < gameboard.shipsPresent.length; i++) {
-      for (let t = 0; t < array.length; t++) {
-        if (gameboard.shipsPresent[i].position.includes(array[t])) {
-          alert("Already a ship here!");
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  function checkForOffBoard(array) {
-    for (let i = 0; i < array.length; i++) {
-      let temp = coordParseReverse(array[i]);
-      if (temp[0] > 9 || temp[0] < 0 || temp[1] > 9 || temp[0] < 0) {
-        alert("ship is off board, try again");
-        return false;
-      }
-    }
-    return true;
-  }
-
   function resetGame() {
     displayController.resetBoard();
     playerOne.playedCoords = [];
     playerTwo.playedCoords = [];
-    gameboardOne.shipsPresent=[];
-    gameboardOne.missedShots=[];
+    gameboardOne.shipsPresent = [];
+    gameboardOne.missedShots = [];
     gameboardOne.unplacedShipsInventory = [5, 4, 4, 3, 3];
 
-    gameboardTwo.shipsPresent=[];
-    gameboardTwo.missedShots=[];
+    gameboardTwo.shipsPresent = [];
+    gameboardTwo.missedShots = [];
     gameboardTwo.unplacedShipsInventory = [5, 4, 4, 3, 3];
     initializeGame();
   }
 
   function turnFlow(whichPlayer) {
-
-
-
-
     const gridBoard = document.querySelectorAll(
       "#game-board-grid-2 > .game-board-grid-item"
     );
     gridBoard.forEach((element) => {
-   
       element.addEventListener("click", getAttackCoordListener);
     });
 
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
     alert("Attack please");
-    /* let attackCoords=attackCoordsInput.value;
-      let coordsArray = coordParse(attackCoords);
-      let x= coordsArray[0];
-      let y=coordsArray[1];*/
-/*
-    attackButton.addEventListener("click", function () {
-      submitAttack(gameController.playerOne, gameController.gameboardTwo);
-    });*/
 
     function getAttackCoordListener(e) {
-   let attackCoord = e.currentTarget.id;
-      submitAttack(gameController.playerOne, gameController.gameboardTwo, attackCoord);
-
-   
-     }
+      let attackCoord = e.currentTarget.id;
+      submitAttack(
+        gameController.playerOne,
+        gameController.gameboardTwo,
+        attackCoord
+      );
+    }
     //right submitAttack now function happens when you submit attack coords, for now button manual entered
     //kicks off the main attack sequence of the game. coordinates are put in attack functino which
     //determines if it's a hit or a miss/already used. If a hit, gameboard takes it and
     //correct ship records the hit. ship then checks if sunk or not, and finally the board checks if
     //all ships are sunk or not.
     function submitAttack(player, gameboard, attackValue) {
-    //  let attackCoords = attackValue;
+      //  let attackCoords = attackValue;
       let coordsArray = [];
 
       if (player.name == "human") {
         coordsArray = coordParseReverse(attackValue);
-
       } else if (player.name == "computer") {
-        coordsArray = coordParseReverse(playerTwo.randomAttack(playerTwo));
-        
-        console.log(coordsArray);
-      }
+        coordsArray = coordParseReverse(playerTwo.getRandomCoords(playerTwo));
 
+      }
 
       let x = coordsArray[0];
       let y = coordsArray[1];
@@ -271,7 +224,11 @@ const gameController = (function () {
           hitOrMissedShip.sunk = hitOrMissedShip.isSunk();
           displayController.displayHitOrMiss(true, coordParse(x, y), gameboard);
         } else {
-          displayController.displayHitOrMiss(false, coordParse(x, y), gameboard);
+          displayController.displayHitOrMiss(
+            false,
+            coordParse(x, y),
+            gameboard
+          );
         }
       } else if (attackResult == false) {
         attackCoordsInput.value = "";
@@ -314,44 +271,11 @@ const displayController = (function () {
       rotateStatus
     );
 
-  // if (e.currentTarget.style.backgroundColor !== "blue") {
-      printProjectedShip(projectShipCoords);
-   // }
+    // if (e.currentTarget.style.backgroundColor !== "blue") {
+    printProjectedShip(projectShipCoords);
+    // }
   }
 
-  function calculateShipToProject(stringCoord, gameboard, rotate) {
-    let positionsToProject = gameboard.unplacedShipsInventory;
-    let coordArray = coordParseReverse(stringCoord);
-    if (coordArray == undefined) {
-      return;
-    }
-    let blankArray = [];
-    if (rotate) {
-      coordArray[1] = coordArray[1] - 1;
-    } else {
-      coordArray[0] = coordArray[0] - 1;
-    }
-
-    let tempY = coordArray[1];
-    let tempX = coordArray[0];
-
-    for (
-      let i = 0;
-      i < positionsToProject[positionsToProject.length - 1];
-      i++
-    ) {
-      if (rotate) {
-        tempY = tempY + 1;
-      } else {
-        tempX = tempX + 1;
-      }
-      let tempCoordArr = [tempX, tempY];
-
-      blankArray.push(coordParse(tempCoordArr[0], tempCoordArr[1]));
-    }
-
-    return blankArray;
-  }
 
   function toggleRotate() {
     this.classList.toggle("true");
@@ -367,7 +291,6 @@ const displayController = (function () {
       if (element.style.backgroundColor == "red") {
         element.style.setProperty("background-color", "blue");
       }
-
     });
   }
   function printShip(e, bool) {
@@ -387,8 +310,8 @@ const displayController = (function () {
         let square = document.querySelector(coord);
 
         square.style.setProperty("background-color", "blue");
-        if(e.currentTarget.style.backgroundColor=="blue"){
-          e.currentTarget.style.backgroundColor=="red"
+        if (e.currentTarget.style.backgroundColor == "blue") {
+          e.currentTarget.style.backgroundColor == "red";
         }
       });
     } else {
@@ -420,13 +343,8 @@ const displayController = (function () {
       if (square.style.backgroundColor == "blue") {
         square.style.setProperty("background-color", "red");
       }
-
-
     });
   }
-
-
-
 
   function displayHitOrMiss(bool, coordsString, gameboard) {
     let coord = "";
@@ -455,13 +373,12 @@ const displayController = (function () {
     resetBoard: resetBoard,
     projectShip: projectShip,
     removeProjectedShip: removeProjectedShip,
-    calculateShipToProject: calculateShipToProject,
     toggleRotate: toggleRotate,
     printShipFake: printShipFake,
   };
 })();
-//Follows this flow: initlializeGame, placeShips (first human place ships, then computerplace ships), 
-//turnFlow, which sets up computer/human taking turns, finally reset game at win, calls 
+//Follows this flow: initlializeGame, placeShips (first human place ships, then computerplace ships),
+//turnFlow, which sets up computer/human taking turns, finally reset game at win, calls
 //initalizeGame
 gameController.initializeGame();
 //gameController.turnFlow();
