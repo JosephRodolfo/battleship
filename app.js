@@ -241,18 +241,14 @@ const gameController = (function () {
 
       if (player.name == "human") {
         coordsArray = coordParseReverse(attackValue);
-        console.log(coordsArray);
 
       } else if (player.name == "computer") {
-        coordsArray = playerTwo.randomAttack();
-        coordsArray = coordParseReverse(coordsArray);
+        coordsArray = coordParseReverse(playerTwo.randomAttack(playerTwo));
+        
+        console.log(coordsArray);
       }
 
-   //   console.log(coordsArray);
 
-      if (coordsArray ==undefined){
-        return;
-      }
       let x = coordsArray[0];
       let y = coordsArray[1];
       let attackResult = "";
@@ -298,8 +294,7 @@ const gameController = (function () {
     initializeGame: initializeGame,
     turnFlow: turnFlow,
     resetGame: resetGame,
-    placeShipHandlerHuman,
-    placeShipHandlerHuman,
+    placeShipHandlerHuman: placeShipHandlerHuman,
     playerOne: playerOne,
     playerTwo: playerTwo,
     gameboardOne: gameboardOne,

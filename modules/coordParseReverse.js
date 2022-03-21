@@ -1,6 +1,6 @@
 export function coordParseReverse(string) {
 
-    if (string ==undefined){
+    if (string ===undefined){
         return;
 ;    }
 
